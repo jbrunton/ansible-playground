@@ -5,8 +5,11 @@
     http_port: 80
     domain: apache.ansible-playground.jbrunton.com
   tasks:
-    - name: install apache2
-      apt: name=apache2 update_cache=yes state=latest
+    - name: install packages
+      apt: name={{ item }} update_cache=yes state=latest
+      with_items:
+        - apache2
+        - git
 
     - name: enable mod_rewrite
       apache2_module: name=rewrite state=present
@@ -41,6 +44,12 @@
         creates: /etc/apache2/sites-enabled/{{ domain }}.conf
       notify:
         - restart apache2
+
+    - name: clone basic html template
+      git:
+        repo=https://github.com/do-community/ansible-apache-tutorial.git
+        dest=/var/www/{{ domain }}
+        update=no
 
   handlers:
     - name: restart apache2
