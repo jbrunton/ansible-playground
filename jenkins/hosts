@@ -1,0 +1,2 @@
+[jenkins]
+jenkins.jbrunton.com ansible_ssh_user=root
